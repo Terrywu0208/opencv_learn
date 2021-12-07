@@ -55,3 +55,33 @@ def cut_img():
     img = img[:100,:200]
     cv2.imshow("img",img)
     cv2.waitKey(0)
+
+def usual():
+    img = cv2.imread(r"img\ford_mustang.png")
+    img = cv2.resize(img , (0,0), fx=1.5, fy= 1.5)
+    kernel = np.ones((3,3),np.uint8)
+
+    gary = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(img , (1,1), 2) # cv2.GaussianBlur(img,(核),標準差)
+    canny = cv2.Canny(img, 200, 250) #cv2.Canny(img, min, max)
+    dilate = cv2.dilate(canny, kernel , iterations=1) #cv2.dilate(canny, 核 , iterations=次數)
+    erode = cv2.erode(dilate, kernel, iterations=1)
+
+    cv2.imshow("img",img)
+    cv2.imshow("gary",gary)
+    cv2.imshow("blur",blur)
+    cv2.imshow("canny",canny)
+    cv2.imshow("dilate",dilate)
+    cv2.imshow("erode",erode)
+    cv2.waitKey(0)
+
+def draw():
+    img = np.zeros((600,600,3),np.uint8)
+
+    cv2.line(img, (0,0), (img.shape[1], img.shape[0]), (0, 0, 255), 2)
+    cv2.rectangle(img, (0, 0), (400, 300),(0,255,0), cv2.FILLED)
+    cv2.circle(img, (300, 400) ,30 ,(200,200,200),2)
+    cv2.putText(img, "Hi" ,(100,500), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 2 , (255,255,255), 2)
+
+    cv2.imshow("img", img)
+    cv2.waitKey(0)
