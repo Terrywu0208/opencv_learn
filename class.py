@@ -85,3 +85,72 @@ def draw():
 
     cv2.imshow("img", img)
     cv2.waitKey(0)
+
+def filter_color():
+    def empty(v):
+        pass
+
+    img = cv2.imread(r"img\winnie.jpg")
+    img = cv2.resize(img,(0,0), fx=0.5, fy=0.5)
+    hsv = cv2.cvtColor(img , cv2.COLOR_BGR2HSV)
+
+    cv2.namedWindow("TrackBar")
+    cv2.resizeWindow("TrackBar", 640, 320)
+
+    cv2.createTrackbar("Hue Min" , "TrackBar", 0, 179, empty)
+    cv2.createTrackbar("Hue Max" , "TrackBar", 177, 179, empty)
+    cv2.createTrackbar("Sat Min" , "TrackBar", 0, 255, empty)
+    cv2.createTrackbar("Sat Max" , "TrackBar", 255, 255, empty)
+    cv2.createTrackbar("Val Min" , "TrackBar", 0, 255, empty)
+    cv2.createTrackbar("Val Max" , "TrackBar", 255, 255, empty)
+
+    while True:
+        h_min = cv2.getTrackbarPos("Hue Min" , "TrackBar")
+        h_max = cv2.getTrackbarPos("Hue Max" , "TrackBar")
+        s_min = cv2.getTrackbarPos("Sat Min" , "TrackBar")
+        s_max = cv2.getTrackbarPos("Sat Max" , "TrackBar")
+        v_min = cv2.getTrackbarPos("Val Min" , "TrackBar")
+        v_max = cv2.getTrackbarPos("Val Max" , "TrackBar")
+        print(h_min, h_max, s_min, s_max, v_min, v_max)
+
+        lower = np.array([h_min, s_min, v_min])
+        upper = np.array([h_max, s_max, v_max])
+
+        mask = cv2.inRange(hsv , lower, upper)
+
+        result = cv2.bitwise_and(img, img, mask = mask)
+
+        cv2.imshow("img",img)
+        cv2.imshow("result",result)
+        cv2.waitKey(10)
+def detcet_geometry():
+    img = cv2.imread(r"img\geometry.png")
+    img = cv2.resize(img,(0,0), fx=2, fy=2)
+    imgContour = img.copy()
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    canny = cv2.Canny(img,150,200)
+    contours, hierarchy = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    for cnt in contours:
+        cv2.drawContours(imgContour, cnt, -1,(255, 0,0), 4)
+        area = cv2.contourArea(cnt)
+        if area >200:
+            peri = cv2.arcLength(cnt, True)
+            vertices = cv2.approxPolyDP(cnt, peri*0.02, True)
+            corners = len(vertices)
+            x, y, w, h = cv2.boundingRect(vertices)
+            cv2.rectangle(imgContour, (x, y), (x+w, y+h), (0, 255, 0), 4)
+            if corners == 3:
+                cv2.putText(imgContour,"Triangle", (x, y-5), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 1, (0,0,255),2)
+            elif corners == 4:
+                cv2.putText(imgContour,"Rectangle", (x, y-5), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 1, (0,0,255),2)
+            elif corners == 5:
+                cv2.putText(imgContour,"Pentagon", (x, y-5), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 1, (0,0,255),2)
+            elif corners >6 :
+                cv2.putText(imgContour,"Circle", (x, y-5), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 1, (0,0,255),2)
+
+    cv2.imshow("img", img)
+    cv2.imshow("canny",canny)
+    cv2.imshow("imgContour", imgContour)
+    cv2.waitKey(0)
+
