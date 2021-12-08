@@ -90,9 +90,10 @@ def filter_color():
     def empty(v):
         pass
 
-    img = cv2.imread(r"img\winnie.jpg")
-    img = cv2.resize(img,(0,0), fx=0.5, fy=0.5)
-    hsv = cv2.cvtColor(img , cv2.COLOR_BGR2HSV)
+    # img = cv2.imread(r"img\winnie.jpg")
+    # img = cv2.resize(img,(0,0), fx=0.5, fy=0.5)
+    cap = cv2.VideoCapture(0)
+
 
     cv2.namedWindow("TrackBar")
     cv2.resizeWindow("TrackBar", 640, 320)
@@ -105,6 +106,8 @@ def filter_color():
     cv2.createTrackbar("Val Max" , "TrackBar", 255, 255, empty)
 
     while True:
+        ref, img = cap.read()
+        hsv = cv2.cvtColor(img , cv2.COLOR_BGR2HSV)
         h_min = cv2.getTrackbarPos("Hue Min" , "TrackBar")
         h_max = cv2.getTrackbarPos("Hue Max" , "TrackBar")
         s_min = cv2.getTrackbarPos("Sat Min" , "TrackBar")
@@ -123,6 +126,7 @@ def filter_color():
         cv2.imshow("img",img)
         cv2.imshow("result",result)
         cv2.waitKey(10)
+        
 def detcet_geometry():
     img = cv2.imread(r"img\geometry.png")
     img = cv2.resize(img,(0,0), fx=2, fy=2)
@@ -153,4 +157,7 @@ def detcet_geometry():
     cv2.imshow("canny",canny)
     cv2.imshow("imgContour", imgContour)
     cv2.waitKey(0)
+
+
+
 
