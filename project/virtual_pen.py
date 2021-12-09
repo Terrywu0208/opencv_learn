@@ -5,8 +5,8 @@ drawpoint = []
 
 def find_pen(img):
     hsv = cv2.cvtColor(img , cv2.COLOR_BGR2HSV)
-    lower = np.array([63, 97, 0])
-    upper = np.array([86, 201, 255])
+    lower = np.array([67, 90, 108])
+    upper = np.array([84, 255, 255])
 
     mask = cv2.inRange(hsv , lower, upper)
 
