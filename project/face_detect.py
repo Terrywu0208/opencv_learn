@@ -4,7 +4,7 @@ cam = cv2.VideoCapture(0)
 faceCascade = cv2.CascadeClassifier(r"haarcascade_frontalface_default.xml")
 
 while True:
-    ref , frame = cam.read() # 會讀取影片的每一幀圖片 回傳 是否成功 及 照片
+    ref , frame = cam.read() # 會讀取影片的每一幀圖片 回傳 是否成功 及 照片           
     if ref == True:
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faceRect = faceCascade.detectMultiScale(gray,1.1, 7)
